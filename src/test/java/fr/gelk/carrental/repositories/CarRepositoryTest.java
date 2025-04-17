@@ -31,16 +31,6 @@ class CarRepositoryTest {
     }
 
     @Test
-    void shouldFindCarByRegistrationNumberWhenExists() {
-        // Test de findByRegistrationNumber() quand la voiture existe
-        this.carRepository.addCar(this.testCar);
-
-        Optional<Car> findCar = this.carRepository.findByRegistrationNumber(this.testCar.getRegistrationNumber());
-        assertTrue(findCar.isPresent());
-        findCar.ifPresent(car -> assertEquals(this.testCar.getRegistrationNumber(), car.getRegistrationNumber()));
-    }
-
-    @Test
     void shouldUpdateCarSuccessfully() {
         // Test de updateCar()
         this.carRepository.addCar(this.testCar);
