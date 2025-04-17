@@ -19,6 +19,11 @@ public class CarController {
         return carRentalService.getAllCars();
     }
 
+    @PostMapping
+    public Car createCar(@RequestBody Car car) {
+        return carRentalService.createCar(car);
+    }
+
     @PostMapping("/rent/{registrationNumber}")
     public boolean rentCar(@PathVariable String registrationNumber) {
         return carRentalService.rentCar(registrationNumber);

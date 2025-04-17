@@ -47,6 +47,10 @@ class CarControllerIntegrationTest {
     @Test
     void shouldRentAvailableCarSuccessfully() throws Exception {
         // POST /cars/rent/{registrationNumber}
+        mockMvc.perform(get("/cars/rent/{registrationNumber}").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(true));
     }
 
     @Test
