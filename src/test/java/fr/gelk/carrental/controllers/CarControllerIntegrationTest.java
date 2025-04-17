@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -47,7 +48,7 @@ class CarControllerIntegrationTest {
     @Test
     void shouldRentAvailableCarSuccessfully() throws Exception {
         // POST /cars/rent/{registrationNumber}
-        mockMvc.perform(get("/cars/rent/{registrationNumber}").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/cars/rent/AB123").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").value(true));
@@ -56,10 +57,16 @@ class CarControllerIntegrationTest {
     @Test
     void shouldReturnCarSuccessfully() throws Exception {
         // POST /cars/return/{registrationNumber}
+        mockMvc.perform(post("/cars/return/AB123").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
     void shouldNotRentUnavailableCar() throws Exception {
         // POST /cars/rent/{registrationNumber} mais déjà louée
+        mockMvc.perform(post("/cars/rent/CD456").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(false));
     }
 }
