@@ -27,8 +27,12 @@ public class CarRentalService {
         return true;
     }
 
-    public Optional<Car> findCar(String registrationNumber) {
-        return carRepository.findByRegistrationNumber(registrationNumber);
+    public Optional<Car> findByRegistration(String registration) {
+        return carRepository.findByRegistrationNumber(registration);
+    }
+
+    public List<Car> findCarByModel(String model) {
+        return carRepository.findByModel(model);
     }
 
     public boolean rentCar(String registrationNumber) {

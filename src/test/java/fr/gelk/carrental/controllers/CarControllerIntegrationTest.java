@@ -32,6 +32,8 @@ class CarControllerIntegrationTest {
         // On ajoute des voitures au "repository en mémoire"
         carRepository.addCar(new Car("AB123", "BMW M3", true));
         carRepository.addCar(new Car("CD456", "Nissan GTR", false));
+        carRepository.addCar(new Car("GH120", "208", false));
+        carRepository.addCar(new Car("EJ134", "208", true));
     }
 
     @Test
@@ -40,7 +42,7 @@ class CarControllerIntegrationTest {
         mockMvc.perform(get("/cars").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(2)) // on attend 2 voitures
+                .andExpect(jsonPath("$.length()").value(4)) // on attend 4 voitures
                 .andExpect(jsonPath("$[0].registrationNumber").value("AB123"))
                 .andExpect(jsonPath("$[1].model").value("Nissan GTR"));
     }
@@ -68,5 +70,30 @@ class CarControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").value(false));
+    }
+
+    @Test
+    void shouldCreateCarSuccessfully() throws Exception {
+        // POST /cars
+        mockMvc.perform(
+                    post("/cars").contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"registrationNumber\":\"YZ890\", \"model\":\"Bugatti Chiron\", \"available\":true}")
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").value(true));
+    }
+
+    @Test
+    void shouldSearchCarByModelSuccessfully() throws Exception {
+        // POST /cars/search
+        mockMvc.perform(
+                    get("/cars/search").contentType(MediaType.APPLICATION_JSON)
+                            .param("model", "208")
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].registrationNumber").value("GH120"))
+                .andExpect(jsonPath("$[1].registrationNumber").value("EJ134"));
     }
 }

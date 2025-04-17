@@ -21,6 +21,12 @@ public class CarRepository {
                 .findFirst();
     }
 
+    public List<Car> findByModel(String model) {
+        return cars.stream()
+                .filter(car -> car.getModel().equals(model))
+                .toList();
+    }
+
     public void addCar(Car car) {
         cars.add(car);
     }

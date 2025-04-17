@@ -1,21 +1,27 @@
 package fr.gelk.carrental.steps;
 
 import fr.gelk.carrental.models.Car;
+import fr.gelk.carrental.repositories.CarRepository;
 import fr.gelk.carrental.services.CarRentalService;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@CucumberContextConfiguration
-public class CarRentalStepDefinition {
+public class CarRentalStepDefinition extends CucumberSpringConfiguration {
 
-    private final CarRentalService carRentalService = new CarRentalService();
+    @Autowired
+    private CarRepository carRepository;
+
+    @Autowired
+    private CarRentalService carRentalService;
+
     private List<Car> carList;
 
     @Given("des voitures sont disponibles")
@@ -40,33 +46,33 @@ public class CarRentalStepDefinition {
 
     @Given("une voiture est disponible")
     public void une_voiture_est_disponible() {
-        carRentalService.createCar(new Car("Tesla", "Model 3", true));
+        carRentalService.createCar(new Car("Tesla141", "Model 3", true));
     }
 
     @When("je loue cette voiture")
     public void je_loue_cette_voiture() {
-        carRentalService.rentCar("Tesla");
+        carRentalService.rentCar("Tesla141");
     }
 
     @Then("la voiture n'est plus disponible")
     public void la_voiture_n_est_plus_disponible() {
-        Optional<Car> updated = carRentalService.findCar("Tesla");
+        Optional<Car> updated = carRentalService.findByRegistration("Tesla141");
         updated.ifPresent(car -> assertFalse(car.isAvailable()));
     }
 
     @Given("une voiture est louée")
     public void une_voiture_est_louee() {
-        carRentalService.createCar(new Car("Ford", "Focus", false));
+        carRentalService.createCar(new Car("Ford200", "Focus", false));
     }
 
     @When("je retourne cette voiture")
     public void je_retourne_cette_voiture() {
-        carRentalService.returnCar("Ford");
+        carRentalService.returnCar("Ford200");
     }
 
     @Then("la voiture est marquée comme disponible")
     public void la_voiture_est_marquee_comme_disponible() {
-        Optional<Car> updated = carRentalService.findCar("Ford");
+        Optional<Car> updated = carRentalService.findByRegistration("Ford200");
         updated.ifPresent(car -> assertTrue(car.isAvailable()));
     }
 }

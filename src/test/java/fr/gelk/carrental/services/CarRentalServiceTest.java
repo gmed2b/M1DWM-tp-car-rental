@@ -39,6 +39,18 @@ class CarRentalServiceTest {
     }
 
     @Test
+    void shouldFindCarByRegistrationNumber() {
+        Car car1 = new Car("AB123", "Audi A4", true);
+        when(carRepository.findByRegistrationNumber("AB123")).thenReturn(Optional.of(car1));
+
+        Optional<Car> result = carRentalService.findByRegistration("AB123");
+
+        verify(carRepository, times(1)).findByRegistrationNumber("AB123");
+        assertTrue(result.isPresent());
+        assertEquals("AB123", result.get().getRegistrationNumber());
+    }
+
+    @Test
     void shouldRentCarSuccessfullyWhenAvailable() {
         // Test rentCar() quand la voiture est dispo
         Car car1 = new Car("AB123", "BMW M3", true);
@@ -113,13 +125,17 @@ class CarRentalServiceTest {
     }
 
     @Test
-    void shouldFindCarByRegistrationNumber() {
-        Car car1 = new Car("GM779", "BMW M2", false);
-        when(carRepository.findByRegistrationNumber("GM779")).thenReturn(Optional.of(car1));
+    void shouldSearchCarByModelSuccessfully() throws Exception {
+        // Test findCar
+        Car car1 = new Car("IJ140", "208", true);
+        Car car2 = new Car("OA834", "208", false);
+        when(carRepository.findByModel("208")).thenReturn(List.of(car1, car2));
 
-        Optional<Car> findCar = carRentalService.findCar("GM779");
+        List<Car> searchCars = carRentalService.findCarByModel("208");
 
-        verify(carRepository, times(1)).findByRegistrationNumber("GM779");
-        findCar.ifPresent(car -> assertEquals(car1.getModel(), car.getModel()));
+        verify(carRepository, times(1)).findByModel("208");
+        assertEquals(2, searchCars.size());
+        assertEquals("IJ140", searchCars.get(0).getRegistrationNumber());
+        assertEquals("OA834", searchCars.get(1).getRegistrationNumber());
     }
 }

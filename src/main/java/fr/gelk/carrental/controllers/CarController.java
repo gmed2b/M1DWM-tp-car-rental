@@ -26,8 +26,8 @@ public class CarController {
     }
 
     @GetMapping("/search")
-    public Optional<Car> searchCar(@RequestParam String registrationNumber) {
-        return carRentalService.findCar(registrationNumber);
+    public List<Car> searchCarByModel(@RequestParam String model) {
+        return carRentalService.findCarByModel(model);
     }
 
     @PostMapping("/rent/{registrationNumber}")
