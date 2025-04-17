@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cars")
@@ -20,8 +21,13 @@ public class CarController {
     }
 
     @PostMapping
-    public Car createCar(@RequestBody Car car) {
+    public boolean createCar(@RequestBody Car car) {
         return carRentalService.createCar(car);
+    }
+
+    @GetMapping("/search")
+    public Optional<Car> searchCar(@RequestParam String registrationNumber) {
+        return carRentalService.findCar(registrationNumber);
     }
 
     @PostMapping("/rent/{registrationNumber}")

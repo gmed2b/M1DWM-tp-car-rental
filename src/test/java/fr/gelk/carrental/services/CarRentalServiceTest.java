@@ -86,4 +86,40 @@ class CarRentalServiceTest {
         verify(carRepository, times(1)).updateCar(car1);
         assertTrue(car1.isAvailable());
     }
+
+    @Test
+    void shouldCreateCarSuccessfully() {
+        // Test createCar()
+        Car newCar = new Car("GM779", "BMW M2", false);
+        when(carRepository.findByRegistrationNumber(newCar.getRegistrationNumber())).thenReturn(Optional.empty());
+        when(carRepository.getAllCars()).thenReturn(List.of(newCar));
+
+        carRentalService.createCar(newCar);
+
+        verify(carRepository, times(1)).addCar(newCar);
+        assertEquals(1, carRentalService.getAllCars().size());
+    }
+
+    @Test
+    void shouldNotCreateCarWithExistingRegistrationNumber() {
+        // Test createCar() quand le numéro existe déjà
+        Car newCar = new Car("GM779", "BMW M2", false);
+        when(carRepository.findByRegistrationNumber(newCar.getRegistrationNumber())).thenReturn(Optional.of(newCar));
+
+        carRentalService.createCar(newCar);
+
+        verify(carRepository, times(1)).findByRegistrationNumber(newCar.getRegistrationNumber());
+        assertTrue(carRentalService.getAllCars().isEmpty());
+    }
+
+    @Test
+    void shouldFindCarByRegistrationNumber() {
+        Car car1 = new Car("GM779", "BMW M2", false);
+        when(carRepository.findByRegistrationNumber("GM779")).thenReturn(Optional.of(car1));
+
+        Optional<Car> findCar = carRentalService.findCar("GM779");
+
+        verify(carRepository, times(1)).findByRegistrationNumber("GM779");
+        findCar.ifPresent(car -> assertEquals(car1.getModel(), car.getModel()));
+    }
 }

@@ -92,4 +92,12 @@ class CarRepositoryTest {
         assertNotNull(result);
         assertEquals(2, result.size());
     }
+
+    @Test
+    void shouldCreateCarSuccessfully() {
+        // Test de createCar()
+        this.carRepository.addCar(this.testCar);
+        assertEquals(1, this.carRepository.getAllCars().size());
+        assertTrue(this.carRepository.findByRegistrationNumber(this.testCar.getRegistrationNumber()).isPresent());
+    }
 }

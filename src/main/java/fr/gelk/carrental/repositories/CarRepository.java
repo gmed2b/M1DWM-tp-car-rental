@@ -15,11 +15,6 @@ public class CarRepository {
         return cars;
     }
 
-    public Car createCar(Car car) {
-        this.cars.add(car);
-        return car;
-    }
-
     public Optional<Car> findByRegistrationNumber(String registrationNumber) {
         return cars.stream()
                 .filter(car -> car.getRegistrationNumber().equals(registrationNumber))

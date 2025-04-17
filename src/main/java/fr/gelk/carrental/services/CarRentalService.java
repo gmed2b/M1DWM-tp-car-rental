@@ -18,8 +18,17 @@ public class CarRentalService {
         return carRepository.getAllCars();
     }
 
-    public Car createCar(Car car) {
-        return carRepository.createCar(car);
+    public boolean createCar(Car car) {
+        Optional<Car> searchCar = carRepository.findByRegistrationNumber(car.getRegistrationNumber());
+        if (searchCar.isPresent()) {
+            return false;
+        }
+        carRepository.addCar(car);
+        return true;
+    }
+
+    public Optional<Car> findCar(String registrationNumber) {
+        return carRepository.findByRegistrationNumber(registrationNumber);
     }
 
     public boolean rentCar(String registrationNumber) {
